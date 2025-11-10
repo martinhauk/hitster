@@ -160,22 +160,127 @@ Automatically pings the MusicPlayer function to:
 
 ## Deployment to Azure
 
-### Using Azure CLI
+### Deployment Options
+
+#### Option 1: Full Deployment (First Time)
+Creates Azure resources AND deploys code:
+```bash
+./deploy-to-azure.sh
+```
+**Use this for:** Initial deployment, creating new Function App
+
+This script will:
+- ✅ Create all necessary Azure resources
+- ✅ Configure Application Insights
+- ✅ Set up proper storage connections
+- ✅ Deploy your function app
+- ✅ Provide deployment URLs
+
+#### Option 2: Code-Only Deployment (Recommended for Updates)
+Deploys code to existing Function App:
+```bash
+./deploy-code-only.sh
+```
+**Use this for:** Code updates, faster deployments to existing apps
+
+#### Option 3: Quick ZIP Deployment (Fastest)
+Fastest deployment using ZIP package:
+```bash
+./deploy-quick.sh
+```
+**Use this for:** Rapid iterations, development deployments
+
+#### Interactive Helper
+Choose your deployment method interactively:
+```bash
+./deploy.sh
+```
+
+### Deployment Scripts Overview
+
+| Script | Purpose | Time | Use Case |
+|--------|---------|------|----------|
+| `deploy.sh` | Interactive helper | - | Choose deployment method |
+| `deploy-to-azure.sh` | Full deployment | 5-10 min | First-time setup |
+| `deploy-code-only.sh` | Code updates | 2-3 min | Regular deployments |
+| `deploy-quick.sh` | ZIP deployment | 30-60 sec | Fast iterations |
+| `test-build.sh` | Build verification | 30 sec | Pre-deployment testing |
+
+### Manual Deployment Using Azure CLI
+
+#### Prerequisites
+- Azure CLI installed and logged in (`az login`)
+- Azure Functions Core Tools v4
+
+#### Step-by-step deployment:
 
 ```bash
-# Create a resource group
-az group create --name hitster-rg --location eastus
+# 1. Set your variables
+RESOURCE_GROUP="hitster-rg"
+FUNCTION_APP_NAME="hitster-music-app"  # Must be globally unique
+STORAGE_ACCOUNT_NAME="hitsterstore123"  # Must be globally unique
+LOCATION="westeurope"
 
-# Create a storage account
-az storage account create --name hitsterfuncstorage --resource-group hitster-rg --location eastus
+# 2. Create resource group
+az group create --name $RESOURCE_GROUP --location $LOCATION
 
-# Create a function app
-az functionapp create --resource-group hitster-rg --consumption-plan-location eastus \
-  --runtime dotnet-isolated --runtime-version 8 --functions-version 4 \
-  --name hitster-function-app --storage-account hitsterfuncstorage
+# 3. Create storage account
+az storage account create \
+    --name $STORAGE_ACCOUNT_NAME \
+    --location $LOCATION \
+    --resource-group $RESOURCE_GROUP \
+    --sku Standard_LRS
 
-# Deploy the function app
-func azure functionapp publish hitster-function-app
+# 4. Create Application Insights
+az monitor app-insights component create \
+    --app $FUNCTION_APP_NAME \
+    --location $LOCATION \
+    --resource-group $RESOURCE_GROUP
+
+# 5. Create function app
+az functionapp create \
+    --resource-group $RESOURCE_GROUP \
+    --consumption-plan-location $LOCATION \
+    --runtime dotnet-isolated \
+    --runtime-version 8 \
+    --functions-version 4 \
+    --name $FUNCTION_APP_NAME \
+    --storage-account $STORAGE_ACCOUNT_NAME \
+    --app-insights $FUNCTION_APP_NAME
+
+# 6. Deploy the function app
+func azure functionapp publish $FUNCTION_APP_NAME --force
+```
+
+#### Verify Deployment
+
+After deployment, your function app will be available at:
+- **Music Player:** `https://{FUNCTION_APP_NAME}.azurewebsites.net/api/MusicPlayer`
+- **Audio API:** `https://{FUNCTION_APP_NAME}.azurewebsites.net/api/audio/sample.mp3`
+
+### Azure Container Deployment
+
+For containerized deployment to Azure Container Apps:
+
+```bash
+# 1. Build and tag the container
+docker build -t hitster-function:latest .
+
+# 2. Login to Azure Container Registry
+az acr login --name <your-registry-name>
+
+# 3. Tag and push
+docker tag hitster-function:latest <your-registry-name>.azurecr.io/hitster-function:latest
+docker push <your-registry-name>.azurecr.io/hitster-function:latest
+
+# 4. Deploy to Container Apps (example)
+az containerapp create \
+    --name hitster-container-app \
+    --resource-group $RESOURCE_GROUP \
+    --environment <container-app-environment> \
+    --image <your-registry-name>.azurecr.io/hitster-function:latest \
+    --target-port 80 \
+    --ingress 'external'
 ```
 
 ### Using Docker with Azure Container Registry
