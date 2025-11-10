@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  hitster-function:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - AzureWebJobsStorage=UseDevelopmentStorage=true
+      - FUNCTIONS_WORKER_RUNTIME=dotnet-isolated
+      - WEBSITE_HOSTNAME=localhost:8080
+    container_name: hitster-music-player
+    restart: unless-stopped

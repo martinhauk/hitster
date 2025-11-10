@@ -1,13 +1,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy csproj and restore dependencies
-COPY *.csproj ./
-RUN dotnet restore
-
-# Copy everything else and build
+# Copy everything
 COPY . ./
-RUN dotnet publish -c Release -o /app/publish
+
+# Restore and build
+RUN dotnet restore && dotnet publish -c Release -o /app/publish
 
 # Build runtime image
 FROM mcr.microsoft.com/azure-functions/dotnet-isolated:4-dotnet-isolated8.0
