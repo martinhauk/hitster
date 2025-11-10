@@ -35,6 +35,53 @@ hitster/
 
 ## Local Development
 
+### Using VS Code Dev Containers (Recommended)
+
+The easiest way to get started is using VS Code Dev Containers, which provides a fully configured development environment.
+
+#### Prerequisites
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+
+#### Getting Started
+
+1. **Open in Dev Container:**
+   - Clone the repository
+   - Open the folder in VS Code
+   - When prompted, click "Reopen in Container" (or press `F1` and select "Dev Containers: Reopen in Container")
+   - Wait for the container to build and initialize (this may take a few minutes on first run)
+
+2. **Run the Application:**
+   ```bash
+   func start
+   ```
+
+3. **Access the Music Player:**
+   - VS Code will automatically forward port 7071
+   - Click the notification to open in browser, or navigate to: `http://localhost:7071/api/MusicPlayer`
+
+#### What's Included
+
+The dev container comes pre-configured with:
+- ✅ .NET 8.0 SDK
+- ✅ Azure Functions Core Tools v4
+- ✅ Azure CLI
+- ✅ Docker-in-Docker support
+- ✅ Recommended VS Code extensions:
+  - C# Dev Kit
+  - Azure Functions
+  - Azure CLI Tools
+  - Docker
+
+#### Benefits
+
+- **No local setup required** - Everything is containerized
+- **Consistent environment** - Same setup for all developers
+- **Automatic port forwarding** - Easy testing
+- **Pre-installed tools** - Azure Functions Core Tools, .NET SDK, and Azure CLI
+- **Isolated dependencies** - Doesn't affect your local machine
+
 ### Running Locally (without Docker)
 
 1. Install Azure Functions Core Tools:
