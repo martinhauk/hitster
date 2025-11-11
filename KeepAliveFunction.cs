@@ -9,11 +9,12 @@ namespace HitsterFunction
     public class KeepAliveFunction
     {
         private readonly ILogger<KeepAliveFunction> _logger;
-        private static readonly HttpClient _httpClient = new HttpClient();
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public KeepAliveFunction(ILogger<KeepAliveFunction> logger)
+        public KeepAliveFunction(ILogger<KeepAliveFunction> logger, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
+            _httpClientFactory = httpClientFactory;
         }
 
         // Runs every 5 minutes to keep the function app warm
@@ -39,7 +40,8 @@ namespace HitsterFunction
                 }
                 _logger.LogInformation($"Pinging MusicPlayer function at: {targetUrl}");
 
-                var response = await _httpClient.GetAsync(targetUrl);
+                var httpClient = _httpClientFactory.CreateClient();
+                var response = await httpClient.GetAsync(targetUrl);
                 
                 if (response.IsSuccessStatusCode)
                 {

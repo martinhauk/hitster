@@ -1,0 +1,16 @@
+{
+  "azure": {
+    "subscription": "",
+    "resourceGroup": "hitster-rg",
+    "location": "eastus",
+    "storageAccountName": "hitsterfuncstorage",
+    "functionAppName": "hitster-function-app",
+    "appServicePlan": "hitster-asp",
+    "containerRegistry": ""
+  },
+  "deployment": {
+    "runtime": "dotnet-isolated",
+    "runtimeVersion": "8",
+    "functionsVersion": "4"
+  }
+}

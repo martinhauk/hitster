@@ -38,6 +38,13 @@ namespace HitsterFunction
         {
             _logger.LogInformation($"GetAudio function triggered for file: {filename}");
 
+            // Validate filename - no path traversal
+            if (filename.Contains("..") || filename.Contains("/") || filename.Contains("\\"))
+            {
+                _logger.LogWarning($"Invalid filename requested: {filename}");
+                return new BadRequestResult();
+            }
+
             try
             {
                 var audioPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", filename);
@@ -50,9 +57,19 @@ namespace HitsterFunction
                 var fileStream = new FileStream(audioPath, FileMode.Open, FileAccess.Read);
                 return new FileStreamResult(fileStream, "audio/mpeg");
             }
-            catch (Exception ex)
+            catch (IOException ex)
             {
-                _logger.LogError(ex, "Error serving audio file");
+                _logger.LogError(ex, "IO error serving audio file");
+                return new StatusCodeResult(500);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                _logger.LogError(ex, "Unauthorized access error serving audio file");
+                return new StatusCodeResult(403);
+            }
+            catch (Exception ex) when (!(ex is OperationCanceledException))
+            {
+                _logger.LogError(ex, "Unexpected error serving audio file");
                 return new StatusCodeResult(500);
             }
         }
@@ -245,6 +262,12 @@ namespace HitsterFunction
                     videoId = match[1];
                     break;
                 }
+            }
+            
+            // Validate that videoId only contains safe characters (alphanumeric, dash, underscore)
+            if (!/^[a-zA-Z0-9_-]+$/.test(videoId)) {
+                alert('Invalid video ID format. Please enter a valid YouTube video ID or URL.');
+                return;
             }
             
             const playerDiv = document.getElementById('videoPlayer');
