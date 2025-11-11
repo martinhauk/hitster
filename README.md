@@ -54,7 +54,14 @@ The easiest way to get started is using VS Code Dev Containers, which provides a
 
 2. **Run the Application:**
    ```bash
+   dotnet build HitsterFunction.csproj
+   cd bin/Debug/net8.0
    func start
+   ```
+   
+   Or use the provided convenience script:
+   ```bash
+   ./start-functions.sh
    ```
 
 3. **Access the Music Player:**

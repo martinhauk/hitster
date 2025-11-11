@@ -101,6 +101,7 @@ az functionapp config appsettings set \
         "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING=$STORAGE_CONNECTION_STRING" \
         "WEBSITE_CONTENTSHARE=${FUNCTION_APP_NAME,,}" \
         "FUNCTIONS_WORKER_RUNTIME=dotnet-isolated" \
+        "WEBSITE_HOSTNAME=${FUNCTION_APP_NAME}.azurewebsites.net" \
         "APPLICATIONINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING"
 
 echo ""
@@ -111,13 +112,16 @@ echo "🧹 Cleaning build artifacts..."
 rm -rf obj bin publish
 
 echo "📦 Restoring packages..."
-dotnet restore hitster.sln
+dotnet restore
 
 echo "🏗️  Publishing project..."
 dotnet publish HitsterFunction.csproj --configuration Release --output ./publish
 
-# Deploy to Azure
+# Deploy to Azure from the publish directory
+echo "🚀 Deploying to Azure..."
+cd publish
 func azure functionapp publish $FUNCTION_APP_NAME --force
+cd ..
 
 echo ""
 echo "✅ Deployment completed!"
