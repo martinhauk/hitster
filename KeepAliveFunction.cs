@@ -27,12 +27,16 @@ namespace HitsterFunction
             {
                 // Get the base URL from environment variable or use localhost for local testing
                 var baseUrl = Environment.GetEnvironmentVariable("WEBSITE_HOSTNAME");
+                string targetUrl;
                 if (string.IsNullOrEmpty(baseUrl))
                 {
                     baseUrl = "localhost:7071"; // Default for local development
+                    targetUrl = $"http://{baseUrl}/api/MusicPlayer";
                 }
-
-                var targetUrl = $"http://{baseUrl}/api/MusicPlayer";
+                else
+                {
+                    targetUrl = $"https://{baseUrl}/api/MusicPlayer";
+                }
                 _logger.LogInformation($"Pinging MusicPlayer function at: {targetUrl}");
 
                 var response = await _httpClient.GetAsync(targetUrl);
