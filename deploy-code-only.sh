@@ -116,8 +116,6 @@ if func azure functionapp publish "$FUNCTION_APP_NAME" --force; then
     echo "   az webapp log tail --name $FUNCTION_APP_NAME --resource-group $RESOURCE_GROUP"
     
 else
-    # Restore solution file on failure too
-    mv hitster.sln.tmp hitster.sln 2>/dev/null || true
     echo ""
     echo "❌ Code deployment failed"
     echo ""
