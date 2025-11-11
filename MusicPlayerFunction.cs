@@ -47,8 +47,8 @@ namespace HitsterFunction
                     return new NotFoundResult();
                 }
 
-                var fileBytes = File.ReadAllBytes(audioPath);
-                return new FileContentResult(fileBytes, "audio/mpeg");
+                var fileStream = new FileStream(audioPath, FileMode.Open, FileAccess.Read);
+                return new FileStreamResult(fileStream, "audio/mpeg");
             }
             catch (Exception ex)
             {
