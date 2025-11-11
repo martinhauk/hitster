@@ -50,9 +50,15 @@ namespace HitsterFunction
                     _logger.LogWarning($"MusicPlayer ping returned non-success status: {response.StatusCode}");
                 }
             }
+            catch (HttpRequestException httpEx)
+            {
+                _logger.LogError(httpEx, "HTTP error pinging MusicPlayer function");
+            }
+            // Catch all other exceptions to prevent the function from crashing.
+            // This is intentional to ensure the timer function continues running.
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error pinging MusicPlayer function");
+                _logger.LogError(ex, "Unexpected error pinging MusicPlayer function");
             }
         }
     }
