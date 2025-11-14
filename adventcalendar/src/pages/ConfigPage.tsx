@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { findExistingPublicFiles } from "../utility";
 import { Link } from "react-router-dom";
+import { Page } from "../features";
 
 export function ConfigPage() {
   const [files, setFiles] = useState<string[]>([]);
@@ -26,8 +27,8 @@ export function ConfigPage() {
   }, []);
 
   return files.map((filename) => (
-    <div key={filename}>
+    <Page key={filename}>
       <Link to={`/player/${filename}`}>{filename}</Link>
-    </div>
+    </Page>
   ));
 }
