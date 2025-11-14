@@ -2,20 +2,23 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "functionAppName": {
-      "value": "hitster-function-app"
+    "resourceGroup": {
+      "value": "rg-hitster-dev"
     },
     "location": {
-      "value": "eastus"
+      "value": "germanywestcentral"
+    },
+    "functionAppName": {
+      "value": "func-hitster-dev"
     },
     "storageAccountName": {
-      "value": "hitsterfuncstorage"
+      "value": "sahitsterdev"
     },
     "appServicePlanName": {
-      "value": "hitster-asp"
+      "value": "asp-hitster-dev"
     },
     "containerRegistryName": {
-      "value": "hitsteracr"
+      "value": "crhitsterdev"
     },
     "dockerImageTag": {
       "value": "latest"

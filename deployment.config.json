@@ -1,12 +1,10 @@
 {
   "azure": {
-    "subscription": "",
-    "resourceGroup": "hitster-rg",
-    "location": "eastus",
-    "storageAccountName": "hitsterfuncstorage",
-    "functionAppName": "hitster-function-app",
-    "appServicePlan": "hitster-asp",
-    "containerRegistry": ""
+    "resourceGroup": "rg-hitster-dev",
+    "location": "germanywestcentral",
+    "storageAccountName": "sahitsterdev",
+    "functionAppName": "func-hitster-dev",
+    "appServicePlan": "asp-hitster-dev"
   },
   "deployment": {
     "runtime": "dotnet-isolated",
