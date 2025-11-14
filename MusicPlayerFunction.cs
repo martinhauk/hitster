@@ -213,8 +213,8 @@ namespace HitsterFunction
 </head>
 <body>
     <div class=""container"">
-        <h1>🎵 Hitster</h1>
-        <p class=""subtitle"">Your personal music streaming experience</p>
+        <h1>🎄 Christinas Adventskalender 🎁</h1>
+        <p class=""subtitle"">Konfigurationsseite</p>
         
         <div class=""player-section"">
             <h2>📻 Embedded Audio</h2>
