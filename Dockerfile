@@ -5,7 +5,7 @@ WORKDIR /src
 COPY . ./
 
 # Restore and build
-RUN dotnet restore && dotnet publish -c Release -o /app/publish
+RUN dotnet restore HitsterFunction.csproj && dotnet publish HitsterFunction.csproj -c Release -o /app/publish
 
 # Build runtime image
 FROM mcr.microsoft.com/azure-functions/dotnet-isolated:4-dotnet-isolated8.0
