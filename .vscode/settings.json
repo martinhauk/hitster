@@ -2,6 +2,7 @@
     "exportall.config.folderListener": [
         "/adventcalendar/src/features",
         "/adventcalendar/src/pages",
-        "/adventcalendar/src/features/Layout"
+        "/adventcalendar/src/features/Layout",
+        "/adventcalendar/src/utility"
     ]
 }

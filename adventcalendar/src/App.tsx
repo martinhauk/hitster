@@ -1,5 +1,5 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { ConfigPage, PlayerPage } from './pages';
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { ConfigPage, PlayerPage } from "./pages";
 
 function App() {
   return (
@@ -7,7 +7,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/config" replace />} />
         <Route path="/config" element={<ConfigPage />} />
-        <Route path="/player" element={<PlayerPage />} />
+        <Route path="/player/:fileName" element={<PlayerPage />} />
       </Routes>
     </BrowserRouter>
   );
