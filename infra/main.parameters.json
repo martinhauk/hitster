@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "functionAppName": {
+      "value": "hitster-function-app"
+    },
+    "location": {
+      "value": "eastus"
+    },
+    "storageAccountName": {
+      "value": "hitsterfuncstorage"
+    },
+    "appServicePlanName": {
+      "value": "hitster-asp"
+    },
+    "containerRegistryName": {
+      "value": "hitsteracr"
+    },
+    "dockerImageTag": {
+      "value": "latest"
+    }
+  }
+}
