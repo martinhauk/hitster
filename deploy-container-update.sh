@@ -37,10 +37,10 @@ if ! command -v jq &> /dev/null; then
     exit 1
 fi
 
+RESOURCE_GROUP=$(jq -r '.parameters.resourceGroup.value' $PARAMS_FILE)
 FUNCTION_APP_NAME=$(jq -r '.parameters.functionAppName.value' $PARAMS_FILE)
 CONTAINER_REGISTRY=$(jq -r '.parameters.containerRegistryName.value' $PARAMS_FILE)
 DOCKER_IMAGE_TAG=$(jq -r '.parameters.dockerImageTag.value' $PARAMS_FILE)
-RESOURCE_GROUP="hitster-rg"
 
 echo "📋 Configuration:"
 echo "   Function App: $FUNCTION_APP_NAME"

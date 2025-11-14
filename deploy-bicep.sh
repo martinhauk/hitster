@@ -51,15 +51,13 @@ if ! command -v jq &> /dev/null; then
 fi
 
 echo "📖 Reading deployment parameters..."
-FUNCTION_APP_NAME=$(jq -r '.parameters.functionAppName.value' $PARAMS_FILE)
+RESOURCE_GROUP=$(jq -r '.parameters.resourceGroup.value' $PARAMS_FILE)
 LOCATION=$(jq -r '.parameters.location.value' $PARAMS_FILE)
+FUNCTION_APP_NAME=$(jq -r '.parameters.functionAppName.value' $PARAMS_FILE)
 STORAGE_ACCOUNT_NAME=$(jq -r '.parameters.storageAccountName.value' $PARAMS_FILE)
 APP_SERVICE_PLAN=$(jq -r '.parameters.appServicePlanName.value' $PARAMS_FILE)
 CONTAINER_REGISTRY=$(jq -r '.parameters.containerRegistryName.value' $PARAMS_FILE)
 DOCKER_IMAGE_TAG=$(jq -r '.parameters.dockerImageTag.value' $PARAMS_FILE)
-
-# Resource group name
-RESOURCE_GROUP="hitster-rg"
 
 echo ""
 echo "📋 Deployment Configuration:"
