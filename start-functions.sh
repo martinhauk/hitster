@@ -3,10 +3,6 @@
 # Start Azure Functions for Hitster project
 echo "🚀 Starting Hitster Azure Functions..."
 
-# Navigate to project root (relative to script location)
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
-
 # Check if Azurite is running
 if ! pgrep -f "azurite" > /dev/null; then
     echo "🗄️  Starting Azurite (Azure Storage Emulator)..."
