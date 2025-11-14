@@ -1,8 +1,11 @@
-@description('The name of the function app')
-param functionAppName string
+@description('The location for all resources')
+param resourceGroup string
 
 @description('The location for all resources')
-param location string = resourceGroup().location
+param location string = az.resourceGroup().location
+
+@description('The name of the function app')
+param functionAppName string
 
 @description('The name of the storage account')
 param storageAccountName string
@@ -112,10 +115,6 @@ resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: 'dotnet-isolated'
-        }
-        {
-          name: 'WEBSITE_HOSTNAME'
-          value: '${functionAppName}.azurewebsites.net'
         }
         {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
