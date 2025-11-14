@@ -1,0 +1,67 @@
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace HitsterFunction
+{
+    public class KeepAliveFunction
+    {
+        private readonly ILogger<KeepAliveFunction> _logger;
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public KeepAliveFunction(ILogger<KeepAliveFunction> logger, IHttpClientFactory httpClientFactory)
+        {
+            _logger = logger;
+            _httpClientFactory = httpClientFactory;
+        }
+
+        // Runs every 5 minutes to keep the function app warm
+        [Function("KeepAlive")]
+        public async Task Run([TimerTrigger("0 */5 * * * *")] TimerInfo timerInfo)
+        {
+            _logger.LogInformation($"KeepAlive function executed at: {DateTime.Now}");
+            _logger.LogInformation($"Next timer schedule at: {timerInfo.ScheduleStatus?.Next}");
+
+            try
+            {
+                // Get the base URL from environment variable or use localhost for local testing
+                var baseUrl = Environment.GetEnvironmentVariable("WEBSITE_HOSTNAME");
+                string targetUrl;
+                if (string.IsNullOrEmpty(baseUrl))
+                {
+                    baseUrl = "localhost:7071"; // Default for local development
+                    targetUrl = $"http://{baseUrl}/api/MusicPlayer";
+                }
+                else
+                {
+                    targetUrl = $"https://{baseUrl}/api/MusicPlayer";
+                }
+                _logger.LogInformation($"Pinging MusicPlayer function at: {targetUrl}");
+
+                var httpClient = _httpClientFactory.CreateClient();
+                var response = await httpClient.GetAsync(targetUrl);
+                
+                if (response.IsSuccessStatusCode)
+                {
+                    _logger.LogInformation($"Successfully pinged MusicPlayer function. Status: {response.StatusCode}");
+                }
+                else
+                {
+                    _logger.LogWarning($"MusicPlayer ping returned non-success status: {response.StatusCode}");
+                }
+            }
+            catch (HttpRequestException httpEx)
+            {
+                _logger.LogError(httpEx, "HTTP error pinging MusicPlayer function");
+            }
+            // Catch all other exceptions to prevent the function from crashing.
+            // This is intentional to ensure the timer function continues running.
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error pinging MusicPlayer function");
+            }
+        }
+    }
+}

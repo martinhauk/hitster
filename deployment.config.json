@@ -1,0 +1,14 @@
+{
+  "azure": {
+    "resourceGroup": "rg-hitster-dev",
+    "location": "germanywestcentral",
+    "storageAccountName": "sahitsterdev",
+    "functionAppName": "func-hitster-dev",
+    "appServicePlan": "asp-hitster-dev"
+  },
+  "deployment": {
+    "runtime": "dotnet-isolated",
+    "runtimeVersion": "8",
+    "functionsVersion": "4"
+  }
+}
