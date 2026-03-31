@@ -23,6 +23,7 @@ declare global {
       ) => YTPlayer;
     };
     onYouTubeIframeAPIReady: () => void;
+    _ytReadyCallbacks?: Array<() => void>;
   }
 }
 
@@ -77,13 +78,21 @@ export function YouTubePlayer({ track, isPlaying }: Props) {
     if (window.YT && window.YT.Player) {
       initPlayer();
     } else {
-      window.onYouTubeIframeAPIReady = initPlayer;
-      if (!document.getElementById('yt-script')) {
-        const script = document.createElement('script');
-        script.id = 'yt-script';
-        script.src = 'https://www.youtube.com/iframe_api';
-        document.head.appendChild(script);
+      // Use a shared callback queue so multiple instances don't overwrite each other.
+      if (!window._ytReadyCallbacks) {
+        window._ytReadyCallbacks = [];
+        window.onYouTubeIframeAPIReady = () => {
+          window._ytReadyCallbacks?.forEach(cb => cb());
+          window._ytReadyCallbacks = [];
+        };
+        if (!document.getElementById('yt-script')) {
+          const script = document.createElement('script');
+          script.id = 'yt-script';
+          script.src = 'https://www.youtube.com/iframe_api';
+          document.head.appendChild(script);
+        }
       }
+      window._ytReadyCallbacks.push(initPlayer);
     }
 
     return () => {
