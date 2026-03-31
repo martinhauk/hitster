@@ -70,10 +70,6 @@ export function GameBoard({ provider }: Props) {
         </div>
       )}
 
-      <div className="text-sm text-gray-500">
-        Provider: <span className="text-purple-400 font-medium">{provider.name}</span>
-      </div>
-
       {/* Hidden audio player — rendered by the provider itself */}
       {currentTrack && <Player track={currentTrack} isPlaying={isPlaying} />}
 

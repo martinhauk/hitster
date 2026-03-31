@@ -1,17 +1,34 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { GameBoard } from './components/GameBoard';
 import { YouTubeProvider } from './providers/YouTubeProvider';
-import { SpotifyProvider } from './providers/SpotifyProvider';
-import type { MusicProvider } from './providers/types';
 
-const providers: Record<string, MusicProvider> = {
-  youtube: new YouTubeProvider(),
-  spotify: new SpotifyProvider(),
-};
+const provider = new YouTubeProvider();
+
+// Pre-load the YouTube IFrame API as soon as the app mounts so that it is
+// ready (or very close to ready) by the time the user hits Play.
+// YouTubePlayer.tsx registers player-specific callbacks into the same
+// _ytReadyCallbacks queue; the guard `if (!window._ytReadyCallbacks)` there
+// ensures the handler is not overwritten when the API is pre-loaded here.
+function preloadYouTubeAPI() {
+  if (typeof window === 'undefined') return;
+  if (document.getElementById('yt-script')) return;
+  if (!window._ytReadyCallbacks) {
+    window._ytReadyCallbacks = [];
+    window.onYouTubeIframeAPIReady = () => {
+      window._ytReadyCallbacks?.forEach(cb => cb());
+      window._ytReadyCallbacks = [];
+    };
+  }
+  const script = document.createElement('script');
+  script.id = 'yt-script';
+  script.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(script);
+}
 
 function App() {
-  const [selectedProvider, setSelectedProvider] = useState<string>('youtube');
-  const provider = providers[selectedProvider];
+  useEffect(() => {
+    preloadYouTubeAPI();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -26,26 +43,8 @@ function App() {
           <p className="text-gray-400 text-lg">Guess the year of the song!</p>
         </div>
 
-        {/* Provider selector */}
-        <div className="flex justify-center gap-3 mb-10">
-          <span className="text-gray-500 text-sm self-center">Source:</span>
-          {Object.entries(providers).map(([key, p]) => (
-            <button
-              key={key}
-              onClick={() => setSelectedProvider(key)}
-              className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
-                selectedProvider === key
-                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50'
-                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
-              }`}
-            >
-              {p.name}
-            </button>
-          ))}
-        </div>
-
         {/* Game */}
-        <GameBoard key={selectedProvider} provider={provider} />
+        <GameBoard provider={provider} />
 
         {/* Footer */}
         <p className="text-center text-gray-600 text-xs mt-16">
