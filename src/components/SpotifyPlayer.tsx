@@ -1,12 +1,7 @@
 import { useEffect, useRef } from 'react';
-import type { Track } from '../providers/types';
+import type { PlayerProps } from '../providers/types';
 
-interface Props {
-  track: Track;
-  isPlaying: boolean;
-}
-
-export function SpotifyPlayer({ track, isPlaying }: Props) {
+export function SpotifyPlayer({ track, isPlaying }: PlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {

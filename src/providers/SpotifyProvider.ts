@@ -1,8 +1,10 @@
 import type { Track, MusicProvider } from './types';
+import { SpotifyPlayer } from '../components/SpotifyPlayer';
 import { tracks } from '../data/tracks';
 
 export class SpotifyProvider implements MusicProvider {
   readonly name = 'Spotify';
+  readonly Player = SpotifyPlayer;
 
   getRandomTrack(): Track {
     const tracksWithPreview = tracks.filter(t => t.previewUrl);

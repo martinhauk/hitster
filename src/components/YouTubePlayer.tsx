@@ -1,10 +1,5 @@
 import { useEffect, useRef } from 'react';
-import type { Track } from '../providers/types';
-
-interface Props {
-  track: Track;
-  isPlaying: boolean;
-}
+import type { PlayerProps } from '../providers/types';
 
 declare global {
   interface Window {
@@ -35,7 +30,7 @@ interface YTPlayer {
   loadVideoById(videoId: string): void;
 }
 
-export function YouTubePlayer({ track, isPlaying }: Props) {
+export function YouTubePlayer({ track, isPlaying }: PlayerProps) {
   const playerRef = useRef<YTPlayer | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isPlayingRef = useRef(isPlaying);
