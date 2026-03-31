@@ -1,0 +1,59 @@
+import { useState } from 'react';
+import { GameBoard } from './components/GameBoard';
+import { YouTubeProvider } from './providers/YouTubeProvider';
+import { SpotifyProvider } from './providers/SpotifyProvider';
+import type { MusicProvider } from './providers/types';
+
+const providers: Record<string, MusicProvider> = {
+  youtube: new YouTubeProvider(),
+  spotify: new SpotifyProvider(),
+};
+
+function App() {
+  const [selectedProvider, setSelectedProvider] = useState<string>('youtube');
+  const provider = providers[selectedProvider];
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white">
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <h1 className="text-6xl font-extrabold tracking-tight mb-2">
+            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              🎵 Hitster
+            </span>
+          </h1>
+          <p className="text-gray-400 text-lg">Guess the year of the song!</p>
+        </div>
+
+        {/* Provider selector */}
+        <div className="flex justify-center gap-3 mb-10">
+          <span className="text-gray-500 text-sm self-center">Source:</span>
+          {Object.entries(providers).map(([key, p]) => (
+            <button
+              key={key}
+              onClick={() => setSelectedProvider(key)}
+              className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
+                selectedProvider === key
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/50'
+                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
+              }`}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+
+        {/* Game */}
+        <GameBoard key={selectedProvider} provider={provider} />
+
+        {/* Footer */}
+        <p className="text-center text-gray-600 text-xs mt-16">
+          Keep track of your own score — no data is saved!
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default App;
