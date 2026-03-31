@@ -41,12 +41,19 @@ export function YouTubePlayer({ track, isPlaying }: PlayerProps) {
 
   useEffect(() => {
     const initPlayer = () => {
-      if (!containerRef.current) return;
+      const container = containerRef.current;
+      if (!container) return;
       if (playerRef.current) {
         playerRef.current.destroy();
         playerRef.current = null;
       }
-      playerRef.current = new window.YT.Player(containerRef.current, {
+      // new YT.Player() replaces the target element with an iframe, which would
+      // corrupt the React ref on subsequent calls.  Create a fresh child div each
+      // time so containerRef (the outer div) stays in the DOM permanently.
+      container.replaceChildren();
+      const playerTarget = document.createElement('div');
+      container.appendChild(playerTarget);
+      playerRef.current = new window.YT.Player(playerTarget, {
         height: '1',
         width: '1',
         videoId: track.youtubeId,
@@ -109,10 +116,9 @@ export function YouTubePlayer({ track, isPlaying }: PlayerProps) {
 
   return (
     <div
+      ref={containerRef}
       className="absolute overflow-hidden opacity-0 pointer-events-none"
       style={{ width: '1px', height: '1px', top: '-9999px', left: '-9999px' }}
-    >
-      <div ref={containerRef} />
-    </div>
+    />
   );
 }
