@@ -34,6 +34,7 @@ export function YouTubePlayer({ track, isPlaying }: PlayerProps) {
   const playerRef = useRef<YTPlayer | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const isPlayingRef = useRef(isPlaying);
+  const playerReadyRef = useRef(false);
 
   useEffect(() => {
     isPlayingRef.current = isPlaying;
@@ -47,6 +48,7 @@ export function YouTubePlayer({ track, isPlaying }: PlayerProps) {
         playerRef.current.destroy();
         playerRef.current = null;
       }
+      playerReadyRef.current = false;
       // new YT.Player() replaces the target element with an iframe, which would
       // corrupt the React ref on subsequent calls.  Create a fresh child div each
       // time so containerRef (the outer div) stays in the DOM permanently.
@@ -68,6 +70,7 @@ export function YouTubePlayer({ track, isPlaying }: PlayerProps) {
         },
         events: {
           onReady: (e) => {
+            playerReadyRef.current = true;
             e.target.setVolume(100);
             if (isPlayingRef.current) {
               e.target.playVideo();
@@ -106,7 +109,7 @@ export function YouTubePlayer({ track, isPlaying }: PlayerProps) {
   }, [track.youtubeId]);
 
   useEffect(() => {
-    if (!playerRef.current) return;
+    if (!playerRef.current || !playerReadyRef.current) return;
     if (isPlaying) {
       playerRef.current.playVideo();
     } else {
